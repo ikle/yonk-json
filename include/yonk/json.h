@@ -54,4 +54,6 @@ bool json_dict_add_string (struct json *o, const char *key, const char *value);
 struct json *json_dict_add_list (struct json *o, const char *key);
 struct json *json_dict_add_dict (struct json *o, const char *key);
 
+struct json *json_read_blob (const char *data, size_t len);
+
 #endif  /* YONK_JSON_H */
