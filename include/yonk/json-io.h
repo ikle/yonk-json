@@ -12,7 +12,7 @@
 #include <stdio.h>
 #include <yonk/json.h>
 
-struct json_input *json_input_open (FILE *from);
+struct json_input *json_input_open_file (FILE *from);
 void json_input_close (struct json_input *o);
 
 /*

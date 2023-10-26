@@ -27,7 +27,7 @@ struct json_input {
 	struct json *node;
 };
 
-struct json_input *json_input_open (FILE *from)
+struct json_input *json_input_open_file (FILE *from)
 {
 	struct json_input *o;
 

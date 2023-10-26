@@ -13,7 +13,7 @@ int main (int argc, char *argv[])
 	struct json_input *in;
 	struct json *o;
 
-	if ((in = json_input_open (stdin)) == NULL) {
+	if ((in = json_input_open_file (stdin)) == NULL) {
 		perror ("E: json_input_alloc");
 		return 1;
 	}
