@@ -20,25 +20,38 @@
 #endif
 
 struct json_input {
-	FILE *f;
 	size_t i, avail;
 	char line[256];
 	char eol, point, type;
 	struct json *node;
+
+	json_read_cb *read;
+	void *cookie;
 };
 
-struct json_input *json_input_open_file (FILE *from)
+struct json_input *json_input_open (json_read_cb reader, void *cookie)
 {
 	struct json_input *o;
 
 	if ((o = malloc (sizeof (*o))) == NULL)
 		return o;
 
-	o->f     = from;
-	o->i     = 0;
-	o->avail = 0;
-	o->point = localeconv()->decimal_point[0];
+	o->i      = 0;
+	o->avail  = 0;
+	o->point  = localeconv()->decimal_point[0];
+	o->read   = reader;
+	o->cookie = cookie;
 	return o;
+}
+
+static size_t stdio_read (void *buf, size_t len, void *cookie)
+{
+	return fread (buf, 1, len, cookie);
+}
+
+struct json_input *json_input_open_file (FILE *from)
+{
+	return json_input_open (stdio_read, from);
 }
 
 void json_input_close (struct json_input *o)
@@ -55,7 +68,7 @@ static size_t in_pull (struct json_input *o)
 	o->i = 0;
 	o->avail = avail;
 
-	o->avail += fread (o->line + avail, 1, sizeof (o->line) - avail, o->f);
+	o->avail += o->read (o->line + avail, sizeof (o->line) - avail, o->cookie);
 
 	o->line[o->avail] = '\0';  /* can be eol */
 	return o->avail;

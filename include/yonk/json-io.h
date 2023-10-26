@@ -12,6 +12,9 @@
 #include <stdio.h>
 #include <yonk/json.h>
 
+typedef size_t json_read_cb (void *buf, size_t len, void *cookie);
+
+struct json_input *json_input_open (json_read_cb reader, void *cookie);
 struct json_input *json_input_open_file (FILE *from);
 void json_input_close (struct json_input *o);
 
